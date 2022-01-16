@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Result from './components/result';
 import Search from './components/search';
 import QueryString from "qs";
-import { clearObj } from "utils";
+import { clearObj, useMount, useDebounce } from "utils";
 
 const URL = process.env.REACT_APP_API_URL
 
@@ -14,26 +14,28 @@ export default function Home() {
     })
     const [users, setUsers] = useState([])
     const [list, setList] = useState([])
+    const debouncePerson = useDebounce(person,2000)
 
     const setSerch = (v) => {
         setPerosn(v)
     }
-
-    useEffect(() => {
+  
+    useMount(() => {
         fetch(`${URL}/users`).then(async res => {
             if (res.ok) {
                 setUsers(await res.json())
             }
         })
-    }, [])
+    })
 
     useEffect(() => {
-        fetch(`${URL}/projects?${QueryString.stringify(clearObj(person))}`).then(async res => {
+        fetch(`${URL}/projects?${QueryString.stringify(clearObj(debouncePerson))}`).then(async res => {
             if (res.ok) {
                 setList(await res.json())
             }
         })
-    }, [person])
+    }, [debouncePerson])
+
 
     return (
         <div>
