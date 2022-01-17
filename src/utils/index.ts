@@ -1,13 +1,16 @@
 // 在函数里面改变传入的对象是不好的
 
+import { log } from "console";
 import { useEffect, useState } from "react";
 
 // 去掉属性为空的属性
-export const clearObj = (object) => {
+export const clearObj = (object: object) => {
   const result = { ...object };
   Object.keys(result).forEach((key) => {
+    //@ts-ignore
     const value = result[key];
     if (isFalsy(value)) {
+      //@ts-ignore
       delete result[key];
     }
   });
@@ -15,7 +18,7 @@ export const clearObj = (object) => {
 };
 
 // 值是否为0
-const isFalsy = (value) => {
+const isFalsy = (value: unknown) => {
   return value === 0 ? false : !value;
 };
 
@@ -26,26 +29,26 @@ const isFalsy = (value) => {
  * 注意： 需要以'use'开头，这样才是一个hook，因为hook只能在组件或者hook中使用，如过没有以‘use’开头，那就是普通函数，
  * 就不能使用其他hook了
  */
-export const useMount = (callback) => {
+export const useMount = (callback: () => void) => {
   useEffect(() => {
     callback();
   }, []);
 };
 
 //普通的截流函数
-const debounce = (func, delay) => {
-  let timer;
-  return (...parms) => {
-    if (timer) {
-      clearTimeout(timer);
-    }
-    timer = setTimeout(() => {
-      func(...parms);
-    }, delay);
-  };
-};
+// const debounce = (func, delay) => {
+//   let timer;
+//   return (...parms) => {
+//     if (timer) {
+//       clearTimeout(timer);
+//     }
+//     timer = setTimeout(() => {
+//       func(...parms);
+//     }, delay);
+//   };
+// };
 
-export const useDebounce = (value, delay) => {
+export const useDebounce = (value: unknown, delay?: number): any => {
   const [newResult, setNewResult] = useState(value);
   useEffect(() => {
     console.log(11111, value);
